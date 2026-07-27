@@ -1,2 +1,8 @@
+title: CoMoSense
+logo: /assets/img/CoMoSense.png
+description: CoMoSense's repositories.
+show_downloads: true
+google_analytics:
+theme: jekyll-theme-minimal
 plugins:
   - jekyll-sitemap
