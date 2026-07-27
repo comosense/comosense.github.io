@@ -64,6 +64,21 @@ jobs:
           </html>
           EOF
 
+          BASE_URL="https://$USERNAME.github.io"
+          CURRENT_DATE=$(date -u +"%Y-%m-%d")
+
+          cat <<EOF > sitemap.xml
+          <?xml version="1.0" encoding="UTF-8"?>
+          <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+              <url>
+                  <loc>$BASE_URL/</loc>
+                  <lastmod>$CURRENT_DATE</lastmod>
+                  <changefreq>daily</changefreq>
+                  <priority>1.0</priority>
+              </url>
+          </urlset>
+          EOF
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
