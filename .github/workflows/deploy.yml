@@ -1,0 +1,72 @@
+name: Deploy Repo List to GitHub Pages
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate Repository List HTML
+        env:
+          USERNAME: ${{ github.repository_owner }}
+        run: |
+          echo "Fetching repositories for $USERNAME..."
+          
+          API_URL="https://api.github.com/users/$USERNAME/repos?per_page=100&sort=updated"
+          
+          cat <<EOF > index.html
+          <!DOCTYPE html>
+          <html lang="ja">
+          <head>
+              <meta charset="UTF-8">
+              <title>$USERNAME's Repositories</title>
+              <style>
+                  body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; line-height: 1.6; }
+                  h1 { border-bottom: 2px solid #eaecef; padding-bottom: .3em; }
+                  .repo-card { border: 1px solid #d1d5db; border-radius: 6px; padding: 16px; margin-bottom: 12px; }
+                  .repo-name { font-weight: bold; font-size: 1.1em; color: #0366d6; text-decoration: none; }
+                  .repo-name:hover { text-decoration: underline; }
+                  .repo-desc { color: #586069; margin-top: 8px; margin-bottom: 0; }
+              </style>
+          </head>
+          <body>
+              <h1>My Repositories</h1>
+              <div id="repo-container">
+          EOF
+
+          curl -s "$API_URL" | jq -r '.[] | select(.fork == false) | "\(.name)|\(.html_url)|\(.description // "説明なし")"' | while IFS="|" read -r name url desc; do
+            echo "    <div class=\"repo-card\">" >> index.html
+            echo "        <a class=\"repo-name\" href=\"$url\" target=\"_blank\">$name</a>" >> index.html
+            echo "        <p class=\"repo-desc\">$desc</p>" >> index.html
+            echo "    </div>" >> index.html
+          done
+
+          cat <<EOF >> index.html
+              </div>
+              <p style="text-align: right; color: #888; font-size: 0.8em;">Last updated: $(date -u)</p>
+          </body>
+          </html>
+          EOF
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
