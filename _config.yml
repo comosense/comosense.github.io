@@ -2,7 +2,7 @@ title: CoMoSense
 logo: /assets/img/CoMoSense.png
 description:
 show_downloads: false
-google_analytics:
+google_analytics: G-PX80C94FVQ
 theme: jekyll-theme-minimal
 plugins:
   - jekyll-sitemap
