@@ -1,5 +1,9 @@
 # [CoMoSense](https://github.com/comosense/)
 
+## [assist](https://github.com/comosense/assist/)
+
+A command-line AI assistant
+
 ## [nnnvr](https://github.com/comosense/nnnvr/)
 
 A simple, minimalist Network Video Recording (NVR) solution.
