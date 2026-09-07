@@ -1,6 +1,6 @@
 # [CoMoSense](https://github.com/comosense/)
 
-## [assist](https://github.com/comosense/Calculator)
+## [Calculator](https://github.com/comosense/Calculator)
 
 A simple calculator app for Wear OS
 
